@@ -35,14 +35,6 @@ impl MarketSimulator {
             ask_quantity: quantity_dist.sample(&mut rng),
         }
     }
-
-    pub async fn simulate_market(mut self) {
-        loop {
-            let tob = self.generate_tob();
-            println!("Generated TOB: {:?}", tob);
-            sleep(Duration::from_millis(500)).await;
-        }
-    }
 }
 
 #[async_trait::async_trait]
