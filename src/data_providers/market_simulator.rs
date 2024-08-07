@@ -1,8 +1,10 @@
-use std::time::Duration;
+use crate::assets::Tob;
+use crate::data_providers::data_provider::DataProvider;
 use rand::distributions::{Distribution, Uniform};
 use rand::Rng;
+use std::time::Duration;
+use tokio::sync::broadcast::Sender;
 use tokio::time::sleep;
-use crate::assets::Tob;
 
 pub struct MarketSimulator {
     last_price: f64,
@@ -39,6 +41,20 @@ impl MarketSimulator {
             let tob = self.generate_tob();
             println!("Generated TOB: {:?}", tob);
             sleep(Duration::from_millis(500)).await;
+        }
+    }
+}
+
+#[async_trait::async_trait]
+impl DataProvider for MarketSimulator {
+    async fn run(&mut self, sender: Sender<Tob>) {
+        loop {
+            let tob = self.generate_tob();
+            println!("Generated TOB: {:?}", tob);
+            if sender.send(tob).is_err() {
+                println!("No active subscribers");
+            }
+            sleep(Duration::from_millis(1000)).await;
         }
     }
 }

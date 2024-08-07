@@ -1,4 +1,6 @@
-#[derive(Debug)]
+use serde::Serialize;
+
+#[derive(Debug, Clone, Serialize)]
 pub struct Tob {
     pub bid_price: f64,
     pub bid_quantity: i32,
