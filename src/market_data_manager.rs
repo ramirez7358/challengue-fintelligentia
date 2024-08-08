@@ -28,10 +28,15 @@ impl MarketDataManager {
             provider.run(tob_sender).await;
         });
 
-        while let Ok(tob) = tob_receiver.recv().await {
-            self.data_consumers.iter().for_each(|dc| {
-                dc.receive(tob.clone());
-            })
+        loop {
+            match tob_receiver.recv().await {
+                Ok(tob) => self.data_consumers.iter().for_each(|dc| {
+                    dc.receive(tob.clone());
+                }),
+                Err(e) => {
+                    println!("{:?}", e)
+                }
+            }
         }
     }
 }

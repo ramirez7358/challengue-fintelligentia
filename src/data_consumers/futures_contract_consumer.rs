@@ -14,9 +14,9 @@ impl FuturesContractConsumer {
         let mut contracts = HashMap::new();
         let mut contract_expires = HashMap::new();
 
-        contracts.insert("Contract1".to_string(), 0.02);
-        contracts.insert("Contract2".to_string(), 0.025);
-        contracts.insert("Contract3".to_string(), 0.03);
+        contracts.insert("Contract1".to_string(), 0.02); // 2% annual risk-free rate
+        contracts.insert("Contract2".to_string(), 0.025); // 2.5% annual risk-free rate
+        contracts.insert("Contract3".to_string(), 0.03); // 3% annual risk-free rate
 
         contract_expires.insert(
             "Contract1".to_string(),
@@ -37,6 +37,16 @@ impl FuturesContractConsumer {
         })
     }
 
+    /*
+    F=S×(1+r×T)
+
+    Donde:
+
+        F es el precio del futuro.
+        S es el precio actual del activo subyacente (en este caso, el precio de demanda o de oferta del TOB).
+        r es la tasa libre de riesgo.
+        T es el tiempo hasta el vencimiento del contrato.
+    */
     fn calculate_and_quote(&self, tob: &Tob) {
         for (contract, rate) in &self.contracts {
             if let Some(expiry) = self.contract_expires.get(contract) {
